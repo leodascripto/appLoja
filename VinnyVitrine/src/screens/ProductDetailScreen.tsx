@@ -70,7 +70,11 @@ const ProductDetailScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Product Image */}
         <View style={styles.imageContainer}>
-          <Image source={product.image} style={styles.productImage} resizeMode="cover" />
+          <Image 
+            source={{ uri: product.image }} 
+            style={styles.productImage} 
+            resizeMode="cover" 
+          />
         </View>
         
         {/* Product Info */}

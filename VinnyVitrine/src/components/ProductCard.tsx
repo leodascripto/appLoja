@@ -37,7 +37,11 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
       activeOpacity={0.8}
     >
       <View style={styles.imageContainer}>
-        <Image source={product.image} style={styles.image} resizeMode="cover" />
+        <Image 
+          source={{ uri: product.image }} 
+          style={styles.image} 
+          resizeMode="cover" 
+        />
         <TouchableOpacity style={styles.favoriteButton}>
           <MaterialCommunityIcons name="heart-outline" size={20} color="#777" />
         </TouchableOpacity>

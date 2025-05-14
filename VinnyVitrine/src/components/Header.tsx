@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SearchBar from './SearchBar';
@@ -14,11 +14,10 @@ const Header = () => {
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <Image 
-          source={require('../../assets/images/logo.png')} 
-          style={styles.logo} 
-          resizeMode="contain"
-        />
+        {/* Temporariamente usando um Text em vez de uma imagem para o logo */}
+        <View style={styles.logoContainer}>
+          <Text style={styles.logoText}>VinnyVitrine</Text>
+        </View>
         <TouchableOpacity onPress={handleCartPress} style={styles.cartButton}>
           <MaterialCommunityIcons name="cart-outline" size={24} color="#333" />
         </TouchableOpacity>
@@ -40,6 +39,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+  },
+  logoContainer: {
+    height: 40,
+    justifyContent: 'center',
+  },
+  logoText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
   },
   logo: {
     height: 40,

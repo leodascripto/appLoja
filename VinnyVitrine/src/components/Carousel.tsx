@@ -57,7 +57,11 @@ const Carousel = ({ title, data }: CarouselProps) => {
       activeOpacity={0.8}
     >
       <View style={styles.imageContainer}>
-        <Image source={item.image} style={styles.image} resizeMode="cover" />
+        <Image 
+          source={{ uri: item.image }} 
+          style={styles.image} 
+          resizeMode="cover" 
+        />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.name} numberOfLines={1}>{item.name}</Text>

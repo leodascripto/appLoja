@@ -21,7 +21,7 @@ const initialCartItems: CartItem[] = [
       name: 'Sofá Modular Elegance',
       description: 'Sofá modular de 3 lugares com tecido premium.',
       price: 2999.99,
-      image: require('../../assets/images/products/sofa.png'),
+      image: 'https://via.placeholder.com/300x200/EAEAEA/333333?text=Sofá+Modular',
       category: '1',
       featured: true,
       rating: 4.8,
@@ -35,7 +35,7 @@ const initialCartItems: CartItem[] = [
       name: 'Cama Queen Oslo',
       description: 'Cama queen size com cabeceira estofada.',
       price: 2499.99,
-      image: require('../../assets/images/products/bed.png'),
+      image: 'https://via.placeholder.com/300x200/EAEAEA/333333?text=Cama+Queen',
       category: '2',
       featured: true,
       rating: 4.9,
@@ -129,7 +129,7 @@ const CartScreen = () => {
             renderItem={({ item }) => (
               <View style={styles.cartItem}>
                 <Image 
-                  source={item.product.image} 
+                  source={{ uri: item.product.image }} 
                   style={styles.productImage} 
                   resizeMode="cover"
                 />
