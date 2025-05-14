@@ -1,23 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { LogBox } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppNavigator from './src/navigation';
+
+// Ignorar o aviso de topInsetsChange se ele persistir
+LogBox.ignoreLogs(['Unsupported top level event type "topInsetsChange" dispatched']);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>VinnyVitrine</Text>
-    </View>
+    <SafeAreaProvider>
+      <StatusBar style="dark" />
+      <AppNavigator />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-  },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});
