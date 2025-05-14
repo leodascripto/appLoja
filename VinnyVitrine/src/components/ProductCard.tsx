@@ -8,8 +8,9 @@ import {
   Dimensions
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Product } from '../types';
+import { RootStackParamList } from '../navigation';
 
 interface ProductCardProps {
   product: Product;
@@ -20,10 +21,10 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2; // 2 cards per row with spacing
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handlePress = () => {
-    navigation.navigate('ProductDetail' as never, { product } as never);
+    navigation.navigate('ProductDetail', { product });
   };
 
   const handleAddToCart = () => {

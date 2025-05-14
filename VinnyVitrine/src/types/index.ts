@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  image: any; // Na implementação real, substituiríamos por URLs de imagens
+  image: string; // Usando strings para URLs de imagens
   category: string;
   featured: boolean;
   rating: number;

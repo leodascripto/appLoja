@@ -20,10 +20,14 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "buildProperties": {
+        "android.app.elf.pagesize": "16K"
+      },
       "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
+    
   }
 }

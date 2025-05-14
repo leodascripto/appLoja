@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RootStackParamList } from '../navigation';
 import SearchBar from './SearchBar';
 
 const Header = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleCartPress = () => {
-    navigation.navigate('Cart' as never);
+    navigation.navigate('Cart');
   };
 
   return (

@@ -6,17 +6,18 @@ import {
   Text 
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation';
 
 interface CartButtonProps {
   itemCount?: number;
 }
 
 const CartButton = ({ itemCount = 0 }: CartButtonProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handlePress = () => {
-    navigation.navigate('Cart' as never);
+    navigation.navigate('Cart');
   };
 
   return (

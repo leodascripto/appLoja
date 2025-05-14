@@ -6,11 +6,11 @@ import {
   FlatList, 
   Dimensions, 
   Image, 
-  TouchableOpacity,
-  Animated
+  TouchableOpacity
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { Product } from '../types';
+import { RootStackParamList } from '../navigation';
 
 interface CarouselProps {
   title: string;
@@ -22,12 +22,12 @@ const ITEM_WIDTH = width * 0.8;
 const ITEM_SPACING = 16;
 
 const Carousel = ({ title, data }: CarouselProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
 
   const handleProductPress = (product: Product) => {
-    navigation.navigate('ProductDetail' as never, { product } as never);
+    navigation.navigate('ProductDetail', { product });
   };
 
   const renderDot = (index: number) => {

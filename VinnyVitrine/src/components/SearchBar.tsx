@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation';
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState('');
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleSearch = () => {
     if (searchText.trim().length > 0) {
-      navigation.navigate('SearchResults' as never, { query: searchText } as never);
+      navigation.navigate('SearchResults', { query: searchText });
       setSearchText('');
     }
   };

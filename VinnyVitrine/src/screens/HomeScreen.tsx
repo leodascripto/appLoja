@@ -5,7 +5,6 @@ import {
   ScrollView, 
   Alert 
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
 import Header from '../components/Header';
 import Carousel from '../components/Carousel';
 import ProductList from '../components/ProductList';
@@ -37,7 +36,6 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" />
       <Header />
       
       <ScrollView 
