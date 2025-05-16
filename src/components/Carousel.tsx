@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 220,
+    height: 180, // Reduzido de 220 para 180
+    aspectRatio: 1,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     overflow: 'hidden',

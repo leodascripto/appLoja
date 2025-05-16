@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  Image, 
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
   TouchableOpacity,
   Dimensions
 } from 'react-native';
@@ -18,7 +18,7 @@ interface ProductCardProps {
 }
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 48) / 2; // 2 cards per row with spacing
+const CARD_WIDTH = (width - 40) / 2;
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -32,33 +32,33 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   };
 
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.container}
       onPress={handlePress}
       activeOpacity={0.8}
     >
       <View style={styles.imageContainer}>
-        <Image 
-          source={product.image} 
-          style={styles.image} 
-          resizeMode="cover" 
+        <Image
+          source={product.image}
+          style={styles.image}
+          resizeMode="cover"
         />
         <TouchableOpacity style={styles.favoriteButton}>
           <MaterialCommunityIcons name="heart-outline" size={20} color="#777" />
         </TouchableOpacity>
       </View>
-      
+
       <View style={styles.infoContainer}>
         <Text style={styles.name} numberOfLines={1}>{product.name}</Text>
-        
+
         <View style={styles.ratingContainer}>
           <MaterialCommunityIcons name="star" size={14} color="#FFD700" />
           <Text style={styles.rating}>{product.rating} ({product.reviews})</Text>
         </View>
-        
+
         <View style={styles.priceRow}>
           <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.addToCartButton}
             onPress={handleAddToCart}
           >
@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 150,
+    height: 120, // Reduzido de 150 para 120
+    aspectRatio: 1,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     overflow: 'hidden',

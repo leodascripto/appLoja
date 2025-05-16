@@ -71,7 +71,7 @@ const ProductDetailScreen = () => {
         {/* Product Image */}
         <View style={styles.imageContainer}>
           <Image 
-            source={{ uri: product.image }} 
+            source={product.image} 
             style={styles.productImage} 
             resizeMode="cover" 
           />
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: width,
-    height: width * 0.8,
+    height: width * 0.7,
   },
   productImage: {
     width: '100%',
