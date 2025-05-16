@@ -18,10 +18,17 @@ import { Product } from '../types';
 export type RootStackParamList = {
   Main: undefined;
   ProductDetail: { product: Product };
-  SearchResults: { query: string };
+  SearchResults: { 
+    query: string; 
+    filterOptions?: {
+      category: string | null;
+      minPrice: number | null;
+      maxPrice: number | null;
+      sortBy: 'price_asc' | 'price_desc' | 'rating' | null;
+    }
+  };
   Cart: undefined;
 };
-
 export type TabParamList = {
   Home: undefined;
   Categories: undefined;

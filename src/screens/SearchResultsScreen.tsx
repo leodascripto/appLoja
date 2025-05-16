@@ -14,7 +14,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation';
 import ProductCard from '../components/ProductCard';
-import { products } from '../utils/mockData';
+import { products, categories } from '../utils/mockData';
 import { Product } from '../types';
 
 type SearchResultsRouteProp = RouteProp<RootStackParamList, 'SearchResults'>;
@@ -22,29 +22,82 @@ type SearchResultsRouteProp = RouteProp<RootStackParamList, 'SearchResults'>;
 const SearchResultsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<SearchResultsRouteProp>();
-  const { query } = route.params;
+  const { query, filterOptions } = route.params;
   
   const [searchText, setSearchText] = useState(query);
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Função para aplicar os filtros nos produtos
+  const applyFilters = (products: Product[], options: any) => {
+    let filteredProducts = [...products];
+    
+    // Filtrar por categoria
+    if (options?.category) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.category === options.category
+      );
+    }
+    
+    // Filtrar por preço mínimo
+    if (options?.minPrice) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.price >= options.minPrice
+      );
+    }
+    
+    // Filtrar por preço máximo
+    if (options?.maxPrice) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.price <= options.maxPrice
+      );
+    }
+    
+    // Ordenação
+    if (options?.sortBy) {
+      switch (options.sortBy) {
+        case 'price_asc':
+          filteredProducts.sort((a, b) => a.price - b.price);
+          break;
+        case 'price_desc':
+          filteredProducts.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating':
+          filteredProducts.sort((a, b) => b.rating - a.rating);
+          break;
+      }
+    }
+    
+    return filteredProducts;
+  };
+
   useEffect(() => {
-    // Simular uma busca
+    // Simular uma busca com filtros
     setLoading(true);
     setTimeout(() => {
-      const filteredProducts = products.filter(product => 
+      // Primeiro filtra pelo termo de busca
+      let filteredProducts = products.filter(product => 
         product.name.toLowerCase().includes(query.toLowerCase()) || 
         product.description.toLowerCase().includes(query.toLowerCase())
       );
+      
+      // Depois aplica os filtros adicionais
+      if (filterOptions) {
+        filteredProducts = applyFilters(filteredProducts, filterOptions);
+      }
+      
       setResults(filteredProducts);
       setLoading(false);
     }, 500);
-  }, [query]);
+  }, [query, filterOptions]);
 
   const handleSearch = () => {
     if (searchText.trim().length > 0) {
-      // Navegar para a mesma tela com a nova consulta
-      navigation.setParams({ query: searchText.trim() } as never);
+      // Navegar para a mesma tela com a nova consulta, mantendo os filtros
+      navigation.setParams({ 
+        query: searchText.trim(),
+        filterOptions
+      } as never);
     }
   };
 
@@ -54,6 +107,34 @@ const SearchResultsScreen = () => {
 
   const handleAddToCart = (product: Product) => {
     Alert.alert('Produto adicionado ao carrinho!');
+  };
+
+  // Formatar os filtros aplicados para mostrar ao usuário
+  const getAppliedFiltersText = () => {
+    if (!filterOptions) return '';
+    
+    const filters = [];
+    
+    if (filterOptions.category) {
+      const category = categories.find(c => c.id === filterOptions.category);
+      if (category) filters.push(category.name);
+    }
+    
+    if (filterOptions.sortBy) {
+      switch (filterOptions.sortBy) {
+        case 'price_asc':
+          filters.push('Menor preço');
+          break;
+        case 'price_desc':
+          filters.push('Maior preço');
+          break;
+        case 'rating':
+          filters.push('Melhor avaliação');
+          break;
+      }
+    }
+    
+    return filters.length > 0 ? `Filtros: ${filters.join(', ')}` : '';
   };
 
   const renderEmptyResults = () => (
@@ -103,9 +184,17 @@ const SearchResultsScreen = () => {
           </View>
         ) : (
           <>
-            <Text style={styles.resultsText}>
-              {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query}"
-            </Text>
+            <View style={styles.resultsHeader}>
+              <Text style={styles.resultsText}>
+                {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query}"
+              </Text>
+              
+              {getAppliedFiltersText() !== '' && (
+                <Text style={styles.filtersText}>
+                  {getAppliedFiltersText()}
+                </Text>
+              )}
+            </View>
             
             {results.length > 0 ? (
               <FlatList
@@ -177,10 +266,18 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
+  resultsHeader: {
+    marginBottom: 16,
+  },
   resultsText: {
     fontSize: 14,
     color: '#777',
-    marginBottom: 16,
+  },
+  filtersText: {
+    fontSize: 14,
+    color: '#333',
+    marginTop: 4,
+    fontWeight: '500',
   },
   columnWrapper: {
     justifyContent: 'space-between',
