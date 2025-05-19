@@ -19,7 +19,7 @@ interface CarouselProps {
 }
 
 const { width } = Dimensions.get('window');
-const ITEM_WIDTH = width * 0.8;
+const ITEM_WIDTH = width * 0.7; // Reduzido para 70% da largura da tela
 const ITEM_SPACING = 16;
 
 const Carousel = ({ title, data, categoryId }: CarouselProps) => {
@@ -89,7 +89,7 @@ const Carousel = ({ title, data, categoryId }: CarouselProps) => {
         <Image 
           source={item.image} 
           style={styles.image} 
-          resizeMode="cover" 
+          resizeMode="contain" // Mudando para "contain" para manter a proporção
         />
       </View>
       <View style={styles.infoContainer}>
@@ -130,7 +130,6 @@ const Carousel = ({ title, data, categoryId }: CarouselProps) => {
   );
 };
 
-// Estilos permanecem iguais...
 const styles = StyleSheet.create({
   container: {
     marginVertical: 16,
@@ -167,11 +166,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 180, // Reduzido de 220 para 180
-    aspectRatio: 1,
+    height: 160, // Reduzido ligeiramente
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     overflow: 'hidden',
+    backgroundColor: '#f9f9f9', // Fundo claro para imagens transparentes
   },
   image: {
     width: '100%',

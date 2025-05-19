@@ -17,8 +17,10 @@ interface ProductCardProps {
   onAddToCart: (product: Product) => void;
 }
 
+// Calculando a largura do cartão com base na tela
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 48) / 2; // Ajustamos o espaçamento
+// Agora garantindo mais espaço entre os itens
+const CARD_WIDTH = (width - 48) / 2; // 16px de padding em cada lado + 16px entre os cards
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -41,7 +43,7 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
         <Image
           source={product.image}
           style={styles.image}
-          resizeMode="cover"
+          resizeMode="contain" // Mudando para "contain" para manter a proporção
         />
         <TouchableOpacity style={styles.favoriteButton}>
           <MaterialCommunityIcons name="heart-outline" size={20} color="#777" />
@@ -89,6 +91,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
     overflow: 'hidden',
     position: 'relative',
+    backgroundColor: '#f9f9f9', // Fundo claro para imagens transparentes
   },
   image: {
     width: '100%',

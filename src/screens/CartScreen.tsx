@@ -131,7 +131,7 @@ const CartScreen = () => {
                 <Image 
                   source={item.product.image}
                   style={styles.productImage} 
-                  resizeMode="cover"
+                  resizeMode="contain" // Alterado para contain
                 />
                 
                 <View style={styles.productInfo}>
@@ -223,10 +223,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   productImage: {
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     borderRadius: 8,
     marginRight: 16,
+    backgroundColor: '#f0f0f0', // Adicionado um fundo para melhorar contraste
   },
   productInfo: {
     flex: 1,

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -19,6 +20,9 @@ import { Product } from '../types';
 
 type SearchResultsRouteProp = RouteProp<RootStackParamList, 'SearchResults'>;
 
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = (width - 48) / 2; // Ajuste para o espaçamento adequado
+
 const SearchResultsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<SearchResultsRouteProp>();
@@ -28,9 +32,6 @@ const SearchResultsScreen = () => {
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Log para depuração
-  console.log("SearchResultsScreen - filterOptions:", filterOptions);
-
   // Função para aplicar os filtros nos produtos
   const applyFilters = (products: Product[], options: any) => {
     if (!options) return products;
@@ -39,8 +40,6 @@ const SearchResultsScreen = () => {
     
     // Filtrar por categoria
     if (options.category) {
-      console.log(`Filtrando por categoria: ${options.category}`);
-      
       // Se a categoria for "featured", filtramos por produtos em destaque
       if (options.category === "featured") {
         filteredProducts = filteredProducts.filter(product => product.featured);
@@ -53,7 +52,6 @@ const SearchResultsScreen = () => {
     
     // Filtrar por preço mínimo
     if (options.minPrice !== null) {
-      console.log(`Filtrando por preço mínimo: ${options.minPrice}`);
       filteredProducts = filteredProducts.filter(product => 
         product.price >= options.minPrice
       );
@@ -61,7 +59,6 @@ const SearchResultsScreen = () => {
     
     // Filtrar por preço máximo
     if (options.maxPrice !== null) {
-      console.log(`Filtrando por preço máximo: ${options.maxPrice}`);
       filteredProducts = filteredProducts.filter(product => 
         product.price <= options.maxPrice
       );
@@ -69,7 +66,6 @@ const SearchResultsScreen = () => {
     
     // Ordenação
     if (options.sortBy) {
-      console.log(`Ordenando por: ${options.sortBy}`);
       switch (options.sortBy) {
         case 'price_asc':
           filteredProducts.sort((a, b) => a.price - b.price);
@@ -323,12 +319,13 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between',
+    gap: 16, // Adicionar espaçamento entre os itens
   },
   listContent: {
     paddingBottom: 24,
   },
   productCardWrapper: {
-    width: '48%',
+    width: CARD_WIDTH,
     marginBottom: 16,
   },
   loaderContainer: {
