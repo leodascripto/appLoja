@@ -18,7 +18,7 @@ interface ProductCardProps {
 }
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 40) / 2;
+const CARD_WIDTH = (width - 48) / 2; // Ajustamos o espaçamento
 
 const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -70,7 +70,6 @@ const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
   );
 };
 
-// Estilos permanecem iguais...
 const styles = StyleSheet.create({
   container: {
     width: CARD_WIDTH,
@@ -85,8 +84,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 120, // Reduzido de 150 para 120
-    aspectRatio: 1,
+    height: 120,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     overflow: 'hidden',

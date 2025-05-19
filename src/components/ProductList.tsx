@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between',
+    gap: 16, // Adicionando um espaçamento entre as colunas
   },
   listContent: {
     paddingBottom: 8,

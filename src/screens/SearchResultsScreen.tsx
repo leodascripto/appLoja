@@ -24,37 +24,52 @@ const SearchResultsScreen = () => {
   const route = useRoute<SearchResultsRouteProp>();
   const { query, filterOptions, categoryName } = route.params;
   
-  const [searchText, setSearchText] = useState(query);
+  const [searchText, setSearchText] = useState(query || '');
   const [results, setResults] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Log para depuração
+  console.log("SearchResultsScreen - filterOptions:", filterOptions);
+
   // Função para aplicar os filtros nos produtos
   const applyFilters = (products: Product[], options: any) => {
+    if (!options) return products;
+    
     let filteredProducts = [...products];
     
     // Filtrar por categoria
-    if (options?.category) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.category === options.category
-      );
+    if (options.category) {
+      console.log(`Filtrando por categoria: ${options.category}`);
+      
+      // Se a categoria for "featured", filtramos por produtos em destaque
+      if (options.category === "featured") {
+        filteredProducts = filteredProducts.filter(product => product.featured);
+      } else {
+        filteredProducts = filteredProducts.filter(product => 
+          product.category === options.category
+        );
+      }
     }
     
     // Filtrar por preço mínimo
-    if (options?.minPrice) {
+    if (options.minPrice !== null) {
+      console.log(`Filtrando por preço mínimo: ${options.minPrice}`);
       filteredProducts = filteredProducts.filter(product => 
         product.price >= options.minPrice
       );
     }
     
     // Filtrar por preço máximo
-    if (options?.maxPrice) {
+    if (options.maxPrice !== null) {
+      console.log(`Filtrando por preço máximo: ${options.maxPrice}`);
       filteredProducts = filteredProducts.filter(product => 
         product.price <= options.maxPrice
       );
     }
     
     // Ordenação
-    if (options?.sortBy) {
+    if (options.sortBy) {
+      console.log(`Ordenando por: ${options.sortBy}`);
       switch (options.sortBy) {
         case 'price_asc':
           filteredProducts.sort((a, b) => a.price - b.price);
@@ -100,7 +115,8 @@ const SearchResultsScreen = () => {
       // Navegar para a mesma tela com a nova consulta, mantendo os filtros
       navigation.setParams({ 
         query: searchText.trim(),
-        filterOptions
+        filterOptions,
+        categoryName
       } as never);
     }
   };
@@ -120,8 +136,12 @@ const SearchResultsScreen = () => {
     const filters = [];
     
     if (filterOptions.category) {
-      const category = categories.find(c => c.id === filterOptions.category);
-      if (category) filters.push(category.name);
+      if (filterOptions.category === "featured") {
+        filters.push("Destaques");
+      } else {
+        const category = categories.find(c => c.id === filterOptions.category);
+        if (category) filters.push(category.name);
+      }
     }
     
     if (filterOptions.sortBy) {

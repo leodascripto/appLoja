@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
 
 // Screens
 import HomeScreen from '../screens/HomeScreen';
@@ -40,16 +41,21 @@ export type TabParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
 
+const CustomTabBarIcon = ({ focused, color, icon, label }: { focused: boolean, color: string, icon: string, label: string }) => {
+  return (
+    <View style={styles.tabIconContainer}>
+      <MaterialCommunityIcons name={icon as any} color={color} size={24} />
+      <Text style={[styles.tabLabel, { color }]}>{label}</Text>
+    </View>
+  );
+};
+
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: '#333',
         tabBarInactiveTintColor: '#999',
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: '500',
-        },
         tabBarStyle: {
           paddingBottom: 5,
           paddingTop: 5,
@@ -57,46 +63,63 @@ const MainTabNavigator = () => {
           borderTopColor: '#eee',
         },
         headerShown: false,
+        tabBarShowLabel: false, // Desativar o label padrão pois estamos usando nosso próprio componente
       }}
     >
       <Tab.Screen 
         name="Home" 
         component={HomeScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+          tabBarIcon: ({ focused, color }) => (
+            <CustomTabBarIcon 
+              focused={focused} 
+              color={color} 
+              icon="home" 
+              label="Início" 
+            />
           ),
-          tabBarLabel: 'Início',
         }}
       />
       <Tab.Screen 
         name="Categories" 
         component={CategoriesScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="view-grid" color={color} size={size} />
+          tabBarIcon: ({ focused, color }) => (
+            <CustomTabBarIcon 
+              focused={focused} 
+              color={color} 
+              icon="view-grid" 
+              label="Categorias" 
+            />
           ),
-          tabBarLabel: 'Categorias',
         }}
       />
       <Tab.Screen 
         name="Cart" 
         component={CartScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="cart" color={color} size={size} />
+          tabBarIcon: ({ focused, color }) => (
+            <CustomTabBarIcon 
+              focused={focused} 
+              color={color} 
+              icon="cart" 
+              label="Carrinho" 
+            />
           ),
-          tabBarLabel: 'Carrinho',
         }}
       />
       <Tab.Screen 
         name="Profile" 
         component={ProfileScreen} 
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
+          tabBarIcon: ({ focused, color }) => (
+            <CustomTabBarIcon 
+              focused={focused} 
+              color={color} 
+              icon="account" 
+              label="Perfil" 
+            />
           ),
-          tabBarLabel: 'Perfil',
         }}
       />
     </Tab.Navigator>
@@ -120,5 +143,18 @@ const AppNavigator = () => {
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  tabIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 5,
+  },
+  tabLabel: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+});
 
 export default AppNavigator;

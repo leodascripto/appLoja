@@ -7,7 +7,8 @@ import {
   Modal,
   Text,
   FlatList,
-  SafeAreaView
+  SafeAreaView,
+  Platform
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -32,6 +33,9 @@ const SearchBar = () => {
   });
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  // Log para depuração
+  console.log("Current filterOptions:", filterOptions);
+
   const handleSearch = () => {
     if (searchText.trim().length > 0) {
       navigation.navigate('SearchResults', { 
@@ -48,9 +52,17 @@ const SearchBar = () => {
 
   const handleApplyFilter = () => {
     setShowFilterModal(false);
+    
     // Se o usuário tiver uma busca ativa, refaz a busca com os novos filtros
     if (searchText.trim().length > 0) {
       handleSearch();
+    } else {
+      // Se não houver busca ativa, navega para a tela de resultados apenas com os filtros
+      navigation.navigate('SearchResults', {
+        query: '',
+        filterOptions: filterOptions,
+        categoryName: 'Filtrado por'
+      });
     }
   };
 
@@ -280,7 +292,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,
-    paddingBottom: 30,
+    paddingBottom: Platform.OS === 'ios' ? 30 : 16,
   },
   modalHeader: {
     flexDirection: 'row',
