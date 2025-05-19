@@ -1,3 +1,4 @@
+// src/navigation/index.tsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,6 +13,14 @@ import CartScreen from '../screens/CartScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import SearchResultsScreen from '../screens/SearchResultsScreen';
+
+// Profile Screens
+import OrdersScreen from '../screens/profile/OrdersScreen';
+import AddressesScreen from '../screens/profile/AddressesScreen';
+import PaymentMethodsScreen from '../screens/profile/PaymentMethodsScreen';
+import WishlistScreen from '../screens/profile/WishlistScreen';
+import SettingsScreen from '../screens/profile/SettingsScreen';
+import HelpSupportScreen from '../screens/profile/HelpSupportScreen';
 
 // Types
 import { Product } from '../types';
@@ -30,7 +39,15 @@ export type RootStackParamList = {
     categoryName?: string;
   };
   Cart: undefined;
+  // Novas rotas de perfil
+  Orders: undefined;
+  Addresses: undefined;
+  PaymentMethods: undefined;
+  Wishlist: undefined;
+  Settings: undefined;
+  Help: undefined;
 };
+
 export type TabParamList = {
   Home: undefined;
   Categories: undefined;
@@ -63,7 +80,7 @@ const MainTabNavigator = () => {
           borderTopColor: '#eee',
         },
         headerShown: false,
-        tabBarShowLabel: false, // Desativar o label padrão pois estamos usando nosso próprio componente
+        tabBarShowLabel: false,
       }}
     >
       <Tab.Screen 
@@ -139,6 +156,14 @@ const AppNavigator = () => {
         <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
         <Stack.Screen name="SearchResults" component={SearchResultsScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
+        
+        {/* Novas telas de perfil */}
+        <Stack.Screen name="Orders" component={OrdersScreen} />
+        <Stack.Screen name="Addresses" component={AddressesScreen} />
+        <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+        <Stack.Screen name="Wishlist" component={WishlistScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Help" component={HelpSupportScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

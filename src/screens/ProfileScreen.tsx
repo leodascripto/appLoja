@@ -1,3 +1,4 @@
+// src/screens/ProfileScreen.tsx
 import React from 'react';
 import { 
   View, 
@@ -6,10 +7,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  ScrollView
+  ScrollView,
+  Alert
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation';
 
 const menuItems = [
   {
@@ -51,6 +55,33 @@ const menuItems = [
 ];
 
 const ProfileScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleNavigate = (screenName: keyof RootStackParamList) => {
+    navigation.navigate(screenName);
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Sair',
+      'Tem certeza que deseja sair?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Sair',
+          onPress: () => {
+            // Aqui viria a lógica de logout
+            Alert.alert('Logout realizado com sucesso!');
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
@@ -71,14 +102,21 @@ const ProfileScreen = () => {
             <Text style={styles.email}>ana.silva@email.com</Text>
           </View>
           
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => handleNavigate('Settings')}
+          >
             <MaterialCommunityIcons name="pencil" size={16} color="#333" />
           </TouchableOpacity>
         </View>
         
         <View style={styles.menuSection}>
           {menuItems.map(item => (
-            <TouchableOpacity key={item.id} style={styles.menuItem}>
+            <TouchableOpacity 
+              key={item.id} 
+              style={styles.menuItem}
+              onPress={() => handleNavigate(item.screen as keyof RootStackParamList)}
+            >
               <View style={styles.menuIconContainer}>
                 <MaterialCommunityIcons name={item.icon as any} size={20} color="#333" />
               </View>
@@ -90,7 +128,10 @@ const ProfileScreen = () => {
           ))}
         </View>
         
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity 
+          style={styles.logoutButton}
+          onPress={handleLogout}
+        >
           <MaterialCommunityIcons name="logout" size={20} color="#E53935" />
           <Text style={styles.logoutText}>Sair</Text>
         </TouchableOpacity>
