@@ -22,7 +22,7 @@ type SearchResultsRouteProp = RouteProp<RootStackParamList, 'SearchResults'>;
 const SearchResultsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute<SearchResultsRouteProp>();
-  const { query, filterOptions } = route.params;
+  const { query, filterOptions, categoryName } = route.params;
   
   const [searchText, setSearchText] = useState(query);
   const [results, setResults] = useState<Product[]>([]);
@@ -75,11 +75,15 @@ const SearchResultsScreen = () => {
     // Simular uma busca com filtros
     setLoading(true);
     setTimeout(() => {
-      // Primeiro filtra pelo termo de busca
-      let filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(query.toLowerCase()) || 
-        product.description.toLowerCase().includes(query.toLowerCase())
-      );
+      let filteredProducts = [...products];
+      
+      // Se temos um termo de busca, filtrar por ele
+      if (query && query.trim().length > 0) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.name.toLowerCase().includes(query.toLowerCase()) || 
+          product.description.toLowerCase().includes(query.toLowerCase())
+        );
+      }
       
       // Depois aplica os filtros adicionais
       if (filterOptions) {
@@ -137,6 +141,14 @@ const SearchResultsScreen = () => {
     return filters.length > 0 ? `Filtros: ${filters.join(', ')}` : '';
   };
 
+  // Determinar o título da página com base nos parâmetros
+  const getPageTitle = () => {
+    if (categoryName) {
+      return categoryName;
+    }
+    return "Resultados da Busca";
+  };
+
   const renderEmptyResults = () => (
     <View style={styles.emptyContainer}>
       <MaterialCommunityIcons name="magnify" size={60} color="#ccc" />
@@ -185,9 +197,13 @@ const SearchResultsScreen = () => {
         ) : (
           <>
             <View style={styles.resultsHeader}>
-              <Text style={styles.resultsText}>
-                {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query}"
-              </Text>
+              <Text style={styles.pageTitle}>{getPageTitle()}</Text>
+              
+              {query && query.trim().length > 0 && (
+                <Text style={styles.resultsText}>
+                  {results.length} {results.length === 1 ? 'resultado' : 'resultados'} para "{query}"
+                </Text>
+              )}
               
               {getAppliedFiltersText() !== '' && (
                 <Text style={styles.filtersText}>
@@ -268,6 +284,12 @@ const styles = StyleSheet.create({
   },
   resultsHeader: {
     marginBottom: 16,
+  },
+  pageTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
   },
   resultsText: {
     fontSize: 14,

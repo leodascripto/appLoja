@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { 
   View, 
   Text, 
@@ -15,19 +15,48 @@ import { RootStackParamList } from '../navigation';
 interface CarouselProps {
   title: string;
   data: Product[];
+  categoryId?: string;
 }
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.8;
 const ITEM_SPACING = 16;
 
-const Carousel = ({ title, data }: CarouselProps) => {
+const Carousel = ({ title, data, categoryId }: CarouselProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const flatListRef = React.useRef<FlatList>(null);
 
   const handleProductPress = (product: Product) => {
     navigation.navigate('ProductDetail', { product });
+  };
+
+  const handleSeeAllPress = () => {
+    // Se tiver um categoryId, navega para visualizar todos os produtos dessa categoria
+    if (categoryId) {
+      navigation.navigate('SearchResults', {
+        query: '',
+        filterOptions: {
+          category: categoryId,
+          minPrice: null,
+          maxPrice: null,
+          sortBy: null
+        },
+        categoryName: title
+      });
+    } else {
+      // Senão, simplesmente mostra todos os produtos destacados
+      navigation.navigate('SearchResults', {
+        query: '',
+        filterOptions: {
+          category: null,
+          minPrice: null,
+          maxPrice: null,
+          sortBy: null
+        },
+        categoryName: title
+      });
+    }
   };
 
   const renderDot = (index: number) => {
@@ -74,7 +103,7 @@ const Carousel = ({ title, data }: CarouselProps) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSeeAllPress}>
           <Text style={styles.seeAll}>Ver todos</Text>
         </TouchableOpacity>
       </View>

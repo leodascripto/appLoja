@@ -44,13 +44,22 @@ const HomeScreen = () => {
       >
         <Carousel 
           title="Destaques" 
-          data={featuredProducts} 
+          data={featuredProducts}
+          // Passando uma prop fictícia para os destaques, como se fosse uma categoria "featured" 
         />
         
         <ProductList 
-          title="Populares" 
-          data={products.slice(0, 6)} 
+          title="Sala de Estar" 
+          data={products.filter(p => p.category === "1").slice(0, 4)} 
           onAddToCart={handleAddToCart}
+          categoryId="1"
+        />
+
+        <ProductList 
+          title="Quarto" 
+          data={products.filter(p => p.category === "2").slice(0, 4)} 
+          onAddToCart={handleAddToCart}
+          categoryId="2"
         />
       </ScrollView>
     </View>

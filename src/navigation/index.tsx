@@ -25,7 +25,8 @@ export type RootStackParamList = {
       minPrice: number | null;
       maxPrice: number | null;
       sortBy: 'price_asc' | 'price_desc' | 'rating' | null;
-    }
+    };
+    categoryName?: string;
   };
   Cart: undefined;
 };

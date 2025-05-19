@@ -4,21 +4,60 @@ import {
   Text, 
   StyleSheet, 
   FlatList,
+  TouchableOpacity,
   Alert
 } from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import ProductCard from './ProductCard';
 import { Product } from '../types';
+import { RootStackParamList } from '../navigation';
 
 interface ProductListProps {
   title: string;
   data: Product[];
   onAddToCart: (product: Product) => void;
+  categoryId?: string;
 }
 
-const ProductList = ({ title, data, onAddToCart }: ProductListProps) => {
+const ProductList = ({ title, data, onAddToCart, categoryId }: ProductListProps) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleSeeAllPress = () => {
+    // Se tiver um categoryId, navega para visualizar todos os produtos dessa categoria
+    if (categoryId) {
+      navigation.navigate('SearchResults', {
+        query: '',
+        filterOptions: {
+          category: categoryId,
+          minPrice: null,
+          maxPrice: null,
+          sortBy: null
+        },
+        categoryName: title
+      });
+    } else {
+      // Senão, simplesmente mostra todos os produtos
+      navigation.navigate('SearchResults', {
+        query: '',
+        filterOptions: {
+          category: null,
+          minPrice: null,
+          maxPrice: null,
+          sortBy: null
+        },
+        categoryName: title
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>{title}</Text>
+        <TouchableOpacity onPress={handleSeeAllPress}>
+          <Text style={styles.seeAll}>Ver todos</Text>
+        </TouchableOpacity>
+      </View>
       
       <FlatList
         data={data}
@@ -44,11 +83,20 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     paddingHorizontal: 16,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 18,
     fontWeight: '600',
     color: '#333',
-    marginBottom: 16,
+  },
+  seeAll: {
+    fontSize: 14,
+    color: '#555',
   },
   columnWrapper: {
     justifyContent: 'space-between',

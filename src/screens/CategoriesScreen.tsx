@@ -9,9 +9,26 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation';
 import { categories } from '../utils/mockData';
 
 const CategoriesScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const handleCategoryPress = (categoryId: string, categoryName: string) => {
+    navigation.navigate('SearchResults', { 
+      query: '',
+      filterOptions: {
+        category: categoryId,
+        minPrice: null,
+        maxPrice: null,
+        sortBy: null
+      },
+      categoryName: categoryName
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="dark" />
@@ -24,7 +41,11 @@ const CategoriesScreen = () => {
         data={categories}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.categoryItem} activeOpacity={0.7}>
+          <TouchableOpacity 
+            style={styles.categoryItem} 
+            activeOpacity={0.7}
+            onPress={() => handleCategoryPress(item.id, item.name)}
+          >
             <View style={styles.iconContainer}>
               <MaterialCommunityIcons name={item.icon as any} size={24} color="#333" />
             </View>
