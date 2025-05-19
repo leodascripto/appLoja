@@ -63,6 +63,11 @@ const WishlistScreen = () => {
     Alert.alert('Produto adicionado ao carrinho!');
   };
 
+  const navigateToHome = () => {
+    // Navegação corrigida: navegando para Main em vez de Home
+    navigation.navigate('Main');
+  };
+
   const renderWishlistItem = ({ item }: { item: Product }) => (
     <View style={styles.productCard}>
       <TouchableOpacity 
@@ -112,7 +117,7 @@ const WishlistScreen = () => {
       </Text>
       <TouchableOpacity 
         style={styles.shopButton}
-        onPress={() => navigation.navigate('Home')}
+        onPress={navigateToHome}
       >
         <Text style={styles.shopButtonText}>Explorar Produtos</Text>
       </TouchableOpacity>

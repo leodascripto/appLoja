@@ -1,4 +1,3 @@
-
 // src/screens/profile/PaymentMethodsScreen.tsx
 import React, { useState } from 'react';
 import { 
@@ -10,12 +9,11 @@ import {
   FlatList,
   Modal,
   TextInput,
-  Alert,
-  Image
+  Alert
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 
 // Modelo de dados para métodos de pagamento
 interface PaymentMethod {
@@ -53,7 +51,7 @@ const mockPaymentMethods: PaymentMethod[] = [
 ];
 
 const PaymentMethodsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(mockPaymentMethods);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedType, setSelectedType] = useState<'credit' | 'debit' | 'pix'>('credit');
@@ -323,11 +321,9 @@ const PaymentMethodsScreen = () => {
                 <Text style={styles.pixInfoText}>
                   Para pagar com PIX, você irá escanear um QR Code durante o processo de checkout.
                 </Text>
-                <Image 
-                  source={require('../../assets/img/pix_icon.png')} 
-                  style={styles.pixIcon}
-                  resizeMode="contain"
-                />
+                <View style={styles.pixIconContainer}>
+                  <MaterialCommunityIcons name="qrcode" size={100} color="#32bcad" />
+                </View>
               </View>
             )}
             
@@ -599,9 +595,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 16,
   },
-  pixIcon: {
+  pixIconContainer: {
     width: 100,
     height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   saveButton: {
     backgroundColor: '#333',

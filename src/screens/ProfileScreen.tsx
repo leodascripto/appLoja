@@ -6,16 +6,25 @@ import {
   StyleSheet, 
   SafeAreaView,
   TouchableOpacity,
-  Image,
   ScrollView,
   Alert
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, ParamListBase } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation';
 
-const menuItems = [
+// Usar tipo genérico para facilitar a navegação
+type NavigationPropsType = NavigationProp<ParamListBase>;
+
+interface MenuItem {
+  id: string;
+  title: string;
+  icon: string;
+  screen: keyof RootStackParamList;
+}
+
+const menuItems: MenuItem[] = [
   {
     id: '1',
     title: 'Meus Pedidos',
@@ -55,9 +64,10 @@ const menuItems = [
 ];
 
 const ProfileScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NavigationPropsType>();
 
-  const handleNavigate = (screenName: keyof RootStackParamList) => {
+  // Função para navegar para qualquer tela
+  const navigateTo = (screenName: string) => {
     navigation.navigate(screenName);
   };
 
@@ -104,7 +114,7 @@ const ProfileScreen = () => {
           
           <TouchableOpacity 
             style={styles.editButton}
-            onPress={() => handleNavigate('Settings')}
+            onPress={() => navigateTo('Settings')}
           >
             <MaterialCommunityIcons name="pencil" size={16} color="#333" />
           </TouchableOpacity>
@@ -115,7 +125,7 @@ const ProfileScreen = () => {
             <TouchableOpacity 
               key={item.id} 
               style={styles.menuItem}
-              onPress={() => handleNavigate(item.screen as keyof RootStackParamList)}
+              onPress={() => navigateTo(item.screen)}
             >
               <View style={styles.menuIconContainer}>
                 <MaterialCommunityIcons name={item.icon as any} size={20} color="#333" />

@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../navigation';
 
 // Usuário mock
 interface UserProfile {
@@ -29,7 +30,7 @@ interface UserProfile {
 }
 
 const SettingsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [userProfile, setUserProfile] = useState<UserProfile>({
     name: 'Ana Silva',
     email: 'ana.silva@email.com',
@@ -47,6 +48,10 @@ const SettingsScreen = () => {
   
   const handleBack = () => {
     navigation.goBack();
+  };
+  
+  const navigateToHome = () => {
+    navigation.navigate('Main');
   };
   
   const handleToggleNotification = (type: keyof UserProfile['notifications']) => {
@@ -110,7 +115,7 @@ const SettingsScreen = () => {
           text: 'Excluir Conta',
           onPress: () => {
             Alert.alert('Conta excluída com sucesso.');
-            navigation.navigate('Home' as never);
+            navigateToHome();
           },
           style: 'destructive',
         },
@@ -262,247 +267,7 @@ const SettingsScreen = () => {
                 {editField === 'phone' && 'Editar Telefone'}
               </Text>
               <TouchableOpacity onPress={() => setEditModalVisible(false)}>
-                <MaterialCommunityIcons name="chat" size={24} color="#333" />
-              </View>
-              <Text style={styles.contactOptionText}>Chat</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Perguntas Frequentes</Text>
-          
-          {faqs.map((faq) => (
-            <View key={faq.id} style={styles.faqItem}>
-              <TouchableOpacity 
-                style={styles.faqQuestion}
-                onPress={() => toggleFaq(faq.id)}
-              >
-                <Text style={styles.questionText}>{faq.question}</Text>
-                <MaterialCommunityIcons 
-                  name={expandedFaq === faq.id ? "chevron-up" : "chevron-down"} 
-                  size={20} 
-                  color="#555" 
-                />
-              </TouchableOpacity>
-              
-              {expandedFaq === faq.id && (
-                <View style={styles.faqAnswer}>
-                  <Text style={styles.answerText}>{faq.answer}</Text>
-                </View>
-              )}
-            </View>
-          ))}
-        </View>
-        
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Envie sua Mensagem</Text>
-          
-          <View style={styles.formContainer}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Assunto</Text>
-              <TextInput 
-                style={styles.input}
-                placeholder="Sobre o que você deseja falar?"
-                value={contactSubject}
-                onChangeText={setContactSubject}
-              />
-            </View>
-            
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Mensagem</Text>
-              <TextInput 
-                style={styles.textArea}
-                placeholder="Digite sua mensagem aqui..."
-                value={contactMessage}
-                onChangeText={setContactMessage}
-                multiline
-                numberOfLines={5}
-                textAlignVertical="top"
-              />
-            </View>
-            
-            <TouchableOpacity 
-              style={styles.sendButton}
-              onPress={handleContact}
-            >
-              <Text style={styles.sendButtonText}>Enviar Mensagem</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        
-        <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>Central de Atendimento</Text>
-          <Text style={styles.infoText}>0800 123 4567</Text>
-          <Text style={styles.infoDetail}>Segunda a Sexta: 8h às 20h</Text>
-          <Text style={styles.infoDetail}>Sábado: 9h às 15h</Text>
-          
-          <Text style={styles.infoTitle}>E-mail de Contato</Text>
-          <Text style={styles.infoText}>suporte@vinnyvitrine.com</Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  placeholder: {
-    width: 40,
-  },
-  content: {
-    flex: 1,
-  },
-  section: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 16,
-  },
-  contactOptionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-  },
-  contactOption: {
-    alignItems: 'center',
-    width: '30%',
-  },
-  contactIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#f5f5f5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  contactOptionText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  faqItem: {
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#eee',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  faqQuestion: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  questionText: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#333',
-    flex: 1,
-    paddingRight: 8,
-  },
-  faqAnswer: {
-    padding: 16,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
-  answerText: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: '#555',
-  },
-  formContainer: {
-    marginBottom: 16,
-  },
-  inputGroup: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 15,
-  },
-  textArea: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 15,
-    minHeight: 100,
-  },
-  sendButton: {
-    backgroundColor: '#333',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  sendButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  infoSection: {
-    paddingHorizontal: 16,
-    paddingVertical: 24,
-    alignItems: 'center',
-  },
-  infoTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#333',
-    marginTop: 16,
-    marginBottom: 4,
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 4,
-  },
-  infoDetail: {
-    fontSize: 13,
-    color: '#777',
-  },
-});
-
-export default HelpSupportScreen;Icons name="close" size={24} color="#333" />
+                <MaterialCommunityIcons name="close" size={24} color="#333" />
               </TouchableOpacity>
             </View>
             
