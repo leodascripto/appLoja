@@ -1,132 +1,162 @@
-// src/screens/profile/OrdersScreen.tsx
-import React from 'react';
+// src/screens/profile/AddressesScreen.tsx
+import React, { useState } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
   SafeAreaView, 
   TouchableOpacity, 
-  FlatList 
+  FlatList,
+  Modal,
+  TextInput,
+  Alert
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-// Modelo de dados para pedidos
-interface Order {
+// Modelo de dados para endereços
+interface Address {
   id: string;
-  date: string;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  total: number;
-  items: number;
+  name: string;
+  street: string;
+  number: string;
+  complement?: string;
+  district: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  isDefault: boolean;
 }
 
-// Dados de exemplo para pedidos
-const mockOrders: Order[] = [
+// Dados de exemplo para endereços
+const mockAddresses: Address[] = [
   {
-    id: 'ORD123456',
-    date: '15/05/2025',
-    status: 'delivered',
-    total: 3299.98,
-    items: 2
+    id: '1',
+    name: 'Casa',
+    street: 'Rua das Flores',
+    number: '123',
+    complement: 'Apto 101',
+    district: 'Jardim Primavera',
+    city: 'São Paulo',
+    state: 'SP',
+    zipCode: '01234-567',
+    isDefault: true,
   },
   {
-    id: 'ORD123455',
-    date: '02/05/2025',
-    status: 'shipped',
-    total: 899.99,
-    items: 1
+    id: '2',
+    name: 'Trabalho',
+    street: 'Avenida Paulista',
+    number: '1578',
+    complement: 'Sala 304',
+    district: 'Bela Vista',
+    city: 'São Paulo',
+    state: 'SP',
+    zipCode: '01310-200',
+    isDefault: false,
   },
-  {
-    id: 'ORD123454',
-    date: '20/04/2025',
-    status: 'delivered',
-    total: 1799.99,
-    items: 1
-  },
-  {
-    id: 'ORD123453',
-    date: '10/03/2025',
-    status: 'cancelled',
-    total: 349.99,
-    items: 1
-  }
 ];
 
-const OrdersScreen = () => {
+const AddressesScreen = () => {
   const navigation = useNavigation();
+  const [addresses, setAddresses] = useState<Address[]>(mockAddresses);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState<Address | null>(null);
 
   const handleBack = () => {
     navigation.goBack();
   };
 
-  const getStatusColor = (status: Order['status']) => {
-    switch (status) {
-      case 'pending':
-        return '#FFA000';
-      case 'processing':
-        return '#1976D2';
-      case 'shipped':
-        return '#7B1FA2';
-      case 'delivered':
-        return '#43A047';
-      case 'cancelled':
-        return '#E53935';
-      default:
-        return '#757575';
-    }
+  const handleAddAddress = () => {
+    setCurrentAddress(null);
+    setModalVisible(true);
   };
 
-  const getStatusText = (status: Order['status']) => {
-    switch (status) {
-      case 'pending':
-        return 'Pendente';
-      case 'processing':
-        return 'Processando';
-      case 'shipped':
-        return 'Enviado';
-      case 'delivered':
-        return 'Entregue';
-      case 'cancelled':
-        return 'Cancelado';
-      default:
-        return 'Desconhecido';
-    }
+  const handleEditAddress = (address: Address) => {
+    setCurrentAddress(address);
+    setModalVisible(true);
   };
 
-  const renderOrderItem = ({ item }: { item: Order }) => (
-    <TouchableOpacity style={styles.orderItem} activeOpacity={0.7}>
-      <View style={styles.orderHeader}>
-        <Text style={styles.orderId}>Pedido #{item.id}</Text>
-        <Text style={styles.orderDate}>{item.date}</Text>
-      </View>
-      
-      <View style={styles.orderInfo}>
-        <Text style={styles.orderTotal}>R$ {item.total.toFixed(2)}</Text>
-        <Text style={styles.orderItems}>{item.items} {item.items > 1 ? 'itens' : 'item'}</Text>
-      </View>
-      
-      <View style={styles.orderFooter}>
-        <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-          <Text style={styles.statusText}>{getStatusText(item.status)}</Text>
+  const handleDeleteAddress = (id: string) => {
+    Alert.alert(
+      'Remover Endereço',
+      'Tem certeza que deseja remover este endereço?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Remover',
+          onPress: () => {
+            setAddresses(addresses.filter(addr => addr.id !== id));
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  const handleSetDefault = (id: string) => {
+    setAddresses(
+      addresses.map(addr => ({
+        ...addr,
+        isDefault: addr.id === id,
+      }))
+    );
+  };
+
+  const renderAddressItem = ({ item }: { item: Address }) => (
+    <View style={styles.addressItem}>
+      <View style={styles.addressHeader}>
+        <View style={styles.nameContainer}>
+          <Text style={styles.addressName}>{item.name}</Text>
+          {item.isDefault && (
+            <View style={styles.defaultBadge}>
+              <Text style={styles.defaultText}>Padrão</Text>
+            </View>
+          )}
         </View>
         
-        <TouchableOpacity style={styles.detailsButton}>
-          <Text style={styles.detailsButtonText}>Ver Detalhes</Text>
-          <MaterialCommunityIcons name="chevron-right" size={16} color="#555" />
-        </TouchableOpacity>
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => handleEditAddress(item)}
+          >
+            <MaterialCommunityIcons name="pencil" size={16} color="#555" />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => handleDeleteAddress(item.id)}
+          >
+            <MaterialCommunityIcons name="trash-can-outline" size={16} color="#555" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </TouchableOpacity>
+      
+      <Text style={styles.addressLine}>{item.street}, {item.number}</Text>
+      {item.complement && <Text style={styles.addressLine}>{item.complement}</Text>}
+      <Text style={styles.addressLine}>{item.district}</Text>
+      <Text style={styles.addressLine}>{item.city}, {item.state}</Text>
+      <Text style={styles.addressLine}>CEP: {item.zipCode}</Text>
+      
+      {!item.isDefault && (
+        <TouchableOpacity 
+          style={styles.setDefaultButton}
+          onPress={() => handleSetDefault(item.id)}
+        >
+          <Text style={styles.setDefaultText}>Definir como padrão</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 
-  const renderEmptyOrders = () => (
+  const renderEmptyAddresses = () => (
     <View style={styles.emptyContainer}>
-      <MaterialCommunityIcons name="shopping-outline" size={60} color="#ccc" />
-      <Text style={styles.emptyTitle}>Sem pedidos recentes</Text>
-      <Text style={styles.emptySubtitle}>Você ainda não fez nenhum pedido</Text>
-      <TouchableOpacity style={styles.shopButton}>
-        <Text style={styles.shopButtonText}>Explorar Produtos</Text>
-      </TouchableOpacity>
+      <MaterialCommunityIcons name="map-marker-off" size={60} color="#ccc" />
+      <Text style={styles.emptyTitle}>Nenhum endereço cadastrado</Text>
+      <Text style={styles.emptySubtitle}>Adicione um endereço para facilitar suas compras</Text>
     </View>
   );
 
